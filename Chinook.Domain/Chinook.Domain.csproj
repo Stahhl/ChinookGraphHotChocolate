@@ -18,4 +18,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chinook.Common\Chinook.Common.csproj" />
+  </ItemGroup>
+
 </Project>

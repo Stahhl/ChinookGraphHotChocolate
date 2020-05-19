@@ -1,4 +1,5 @@
 ﻿using System;
+using Chinook.Common;
 using Chinook.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -32,7 +33,7 @@ namespace Chinook.Domain
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Chinook;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(AppSettingsManager.Settings["ConnectionStrings:Chinook"]);
             }
         }
 

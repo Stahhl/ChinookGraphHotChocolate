@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HotChocolate.Types.Filters" Version="10.4.3" />
+    <PackageReference Include="HotChocolate.Types.Sorting" Version="10.4.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 

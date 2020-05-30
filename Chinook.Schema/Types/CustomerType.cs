@@ -8,5 +8,6 @@ namespace Chinook.Schema.Types
 {
     public class CustomerType : ObjectType<Customer>
     {
+        
     }
 }

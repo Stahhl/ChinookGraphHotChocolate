@@ -19,13 +19,11 @@ namespace Chinook.Api.Diagnostics
         public void BeginQueryExecute(IQueryContext context)
         {
             // ... your code
-            var request = context.Request;
+            var request = context.Request.Query;
         }
 
         [DiagnosticName("HotChocolate.Execution.Query.Stop")]
-        public void EndQueryExecute(
-            IQueryContext context,
-            IExecutionResult result)
+        public void EndQueryExecute(IQueryContext context, IExecutionResult result)
         {
             // ... your code
         }

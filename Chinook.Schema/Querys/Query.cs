@@ -14,12 +14,13 @@ namespace Chinook.Schema.Querys
 {
     public class Query
     {
-        public string Hello => "world";
+        public async Task<Customer> SingleCustomer([Service] ChinookContext context, int id)
+        {
+            var result = await context.Customer.FirstOrDefaultAsync(x => x.CustomerId == id);
 
-        [UsePaging]
-        [UseFiltering]
-        [UseSorting]
-        public async Task<IQueryable<Customer>> GetCustomers([Service] ChinookContext context)
+            return result;
+        }
+        public async Task<IQueryable<Customer>> AllCustomers([Service] ChinookContext context)
         {
             var result = await context.Customer.ToListAsync();
 

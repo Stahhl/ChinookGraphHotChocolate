@@ -29,7 +29,7 @@ namespace Chinook.Api
             services.AddDbContext<ChinookContext>();
 
             var schemaBuilder = new SchemaBuilder();
-            schemaBuilder.AddQueryType<Query>();
+            schemaBuilder.AddQueryType<QueryType>();
 
             services.AddGraphQL(schemaBuilder);
         }

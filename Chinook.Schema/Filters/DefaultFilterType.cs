@@ -13,7 +13,7 @@ namespace Chinook.Schema.Filters
         {
             descriptor
                 .BindFieldsImplicitly()
-                .Filter(x => x.Country.ToUpper());
+                .Filter(x => x.Country);
         }
     }
 }

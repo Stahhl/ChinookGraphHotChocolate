@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotChocolate.Types;
+using System;
 using System.Collections.Generic;
 
 namespace Chinook.Domain.Models

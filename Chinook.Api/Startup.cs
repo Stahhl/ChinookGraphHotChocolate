@@ -1,5 +1,6 @@
 using Chinook.Api.Diagnostics;
 using Chinook.Domain;
+using Chinook.Schema;
 using Chinook.Schema.Querys;
 using HotChocolate;
 using HotChocolate.AspNetCore;
@@ -26,11 +27,9 @@ namespace Chinook.Api
         {
             services.AddControllers();
             services.AddDiagnosticObserver<ApiObserver>();
-            services.AddDbContext<ChinookContext>();
+            services.AddTransient<ChinookContext>();
 
-            var schemaBuilder = new SchemaBuilder();
-            schemaBuilder.AddQueryType<QueryType>();
-
+            var schemaBuilder = ComponentFactory.GetSchemaBuilder();
             services.AddGraphQL(schemaBuilder);
         }
 

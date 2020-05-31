@@ -14,15 +14,30 @@ namespace Chinook.Schema.Querys
 {
     public class Query
     {
-        public async Task<Customer> SingleCustomer([Service] ChinookContext context, int id)
-        {
-            var result = await context.Customer.FirstOrDefaultAsync(x => x.CustomerId == id);
+        //public async Task<Customer> SingleCustomer([Service] ChinookContext context, int id)
+        //{
+        //    var result = await context.Customer.FirstOrDefaultAsync(customer => customer.CustomerId == id);
 
-            return result;
-        }
-        public async Task<IQueryable<Customer>> AllCustomers([Service] ChinookContext context)
+        //    return result;
+        //}
+        public async Task<IQueryable<Customer>> Customers([Service] ChinookContext context)
         {
             var result = await context.Customer.ToListAsync();
+
+            return result.AsQueryable();
+        }
+
+
+        public async Task<IQueryable<Artist>> Artists([Service] ChinookContext context)
+        {
+            var result = await context.Artist.ToListAsync();
+
+            return result.AsQueryable();
+        }
+
+        public async Task<IQueryable<Invoice>> Invoices([Service] ChinookContext context)
+        {
+            var result = await context.Invoice.ToListAsync();
 
             return result.AsQueryable();
         }

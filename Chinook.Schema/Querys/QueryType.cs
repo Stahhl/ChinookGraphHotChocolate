@@ -11,8 +11,16 @@ namespace Chinook.Schema.Querys
     {
         protected override void Configure(IObjectTypeDescriptor<Query> descriptor)
         {
-            descriptor.Field(t => t.AllCustomers(default))
+            descriptor.Field(t => t.Customers(default))
                 .Type<ListType<NonNullType<CustomerType>>>()
+                .UseFiltering<DefaultFilterType>();
+
+            descriptor.Field(t => t.Artists(default))
+                .Type<ListType<NonNullType<ArtistType>>>()
+                .UseFiltering<DefaultFilterType>();
+
+            descriptor.Field(t => t.Invoices(default))
+                .Type<ListType<NonNullType<InvoiceType>>>()
                 .UseFiltering<DefaultFilterType>();
         }
     }

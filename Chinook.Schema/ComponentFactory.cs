@@ -7,20 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Chinook.Test
+namespace Chinook.Schema
 {
     public static class ComponentFactory
     {
         public static IServiceProvider GetServiceProvider()
         {
-            var result = new ServiceCollection().AddDbContext<ChinookContext>().BuildServiceProvider();
+            var result = new ServiceCollection().AddTransient<ChinookContext>().BuildServiceProvider();
 
             return result;
         }
         public static SchemaBuilder GetSchemaBuilder()
         {
             var result = new SchemaBuilder();
-            result.AddQueryType<Query>();
+            result.AddQueryType<QueryType>();
 
             return result;
         }

@@ -13,15 +13,19 @@ namespace Chinook.Schema.Querys
         {
             descriptor.Field(t => t.Customers(default))
                 .Type<ListType<NonNullType<CustomerType>>>()
-                .UseFiltering<DefaultFilterType>();
+                .UseFiltering();
 
             descriptor.Field(t => t.Artists(default))
                 .Type<ListType<NonNullType<ArtistType>>>()
-                .UseFiltering<DefaultFilterType>();
+                .UseFiltering();
 
             descriptor.Field(t => t.Invoices(default))
                 .Type<ListType<NonNullType<InvoiceType>>>()
-                .UseFiltering<DefaultFilterType>();
+                .UseFiltering();
+
+            descriptor.Field(t => t.Employees(default))
+                .Type<ListType<NonNullType<EmployeeType>>>()
+                .UseFiltering();
         }
     }
 }

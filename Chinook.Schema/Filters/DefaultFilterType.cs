@@ -7,13 +7,12 @@ using System.Text;
 
 namespace Chinook.Schema.Filters
 {
-    public class DefaultFilterType : FilterInputType<Customer>
-    {
-        protected override void Configure(IFilterInputTypeDescriptor<Customer> descriptor)
-        {
-            descriptor
-                .BindFieldsImplicitly()
-                .Filter(x => x.Country);
-        }
-    }
+    //public class DefaultFilterType : FilterInputType<Customer>
+    //{
+    //    protected override void Configure(IFilterInputTypeDescriptor<Customer> descriptor)
+    //    {
+    //        descriptor
+    //            .BindFieldsImplicitly();
+    //    }
+    //}
 }

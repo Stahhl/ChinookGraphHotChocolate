@@ -88,5 +88,27 @@ namespace Chinook.Test
 
             Assert.Equal(0, result.Errors.Count);
         }
+        /// <summary>
+        /// 4. Provide a query showing only the Employees who are Sales Agents.
+        /// </summary>
+        [Fact]
+        public async void Test_04()
+        {
+            string gql =
+                "query{" +
+                  "employees(where: {title_contains: \"Agent\"}){" +
+                        "firstName " +
+                        "lastName " +
+                        "title " +
+                    "}}";
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var result = await executor.ExecuteAsync(request);
+
+            Assert.Equal(0, result.Errors.Count);
+        }
     }
 }

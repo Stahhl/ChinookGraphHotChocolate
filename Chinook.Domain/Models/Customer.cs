@@ -1,4 +1,5 @@
-﻿using HotChocolate.Types;
+﻿using HotChocolate;
+using HotChocolate.Types;
 using System;
 using System.Collections.Generic;
 
@@ -25,7 +26,9 @@ namespace Chinook.Domain.Models
         public string Email { get; set; }
         public int? SupportRepId { get; set; }
 
+        [GraphQLIgnore]
         public virtual Employee SupportRep { get; set; }
+        [GraphQLIgnore]
         public virtual ICollection<Invoice> Invoice { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotChocolate;
+using System;
 using System.Collections.Generic;
 
 namespace Chinook.Domain.Models
@@ -13,6 +14,7 @@ namespace Chinook.Domain.Models
         public int PlaylistId { get; set; }
         public string Name { get; set; }
 
+        [GraphQLIgnore]
         public virtual ICollection<PlaylistTrack> PlaylistTrack { get; set; }
     }
 }

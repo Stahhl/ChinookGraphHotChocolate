@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotChocolate;
+using System;
 using System.Collections.Generic;
 
 namespace Chinook.Domain.Models
@@ -27,8 +28,11 @@ namespace Chinook.Domain.Models
         public string Fax { get; set; }
         public string Email { get; set; }
 
+        [GraphQLIgnore]
         public virtual Employee ReportsToNavigation { get; set; }
+        [GraphQLIgnore]
         public virtual ICollection<Customer> Customer { get; set; }
+        [GraphQLIgnore]
         public virtual ICollection<Employee> InverseReportsToNavigation { get; set; }
     }
 }

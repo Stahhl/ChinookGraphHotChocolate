@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Chinook.Common.StringHelper;
 
 namespace Chinook.Schema.Types
 {
@@ -20,11 +21,11 @@ namespace Chinook.Schema.Types
 
             descriptor.Field<CustomerType>(r => r.SupportRep(default, default))
                 .UseFiltering()
-                .Name(nameof(CustomerType.SupportRep).ToLower());
+                .Name(camelCase(nameof(CustomerType.SupportRep)));
 
             descriptor.Field<CustomerType>(r => r.Invoices(default, default))
                 .UseFiltering()
-                .Name(nameof(CustomerType.Invoices).ToLower());
+                .Name(camelCase(nameof(CustomerType.Invoices)));
         }
 
         public Employee SupportRep([Service] ChinookContext context, [Parent] Customer customer)

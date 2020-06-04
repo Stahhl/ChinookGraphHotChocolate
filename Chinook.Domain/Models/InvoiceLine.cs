@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotChocolate;
+using System;
 using System.Collections.Generic;
 
 namespace Chinook.Domain.Models
@@ -11,7 +12,9 @@ namespace Chinook.Domain.Models
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
 
+        [GraphQLIgnore]
         public virtual Invoice Invoice { get; set; }
+        [GraphQLIgnore]
         public virtual Track Track { get; set; }
     }
 }

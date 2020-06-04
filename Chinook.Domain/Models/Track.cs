@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotChocolate;
+using System;
 using System.Collections.Generic;
 
 namespace Chinook.Domain.Models
@@ -21,10 +22,15 @@ namespace Chinook.Domain.Models
         public int? Bytes { get; set; }
         public decimal UnitPrice { get; set; }
 
+        [GraphQLIgnore]
         public virtual Album Album { get; set; }
+        [GraphQLIgnore]
         public virtual Genre Genre { get; set; }
+        [GraphQLIgnore]
         public virtual MediaType MediaType { get; set; }
+        [GraphQLIgnore]
         public virtual ICollection<InvoiceLine> InvoiceLine { get; set; }
+        [GraphQLIgnore]
         public virtual ICollection<PlaylistTrack> PlaylistTrack { get; set; }
     }
 }

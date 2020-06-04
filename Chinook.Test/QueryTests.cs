@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using Xunit;
+using Newtonsoft.Json;
+using Chinook.Schema.Models;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace Chinook.Test
 {
@@ -101,6 +105,89 @@ namespace Chinook.Test
                         "lastName " +
                         "title " +
                     "}}";
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var result = await executor.ExecuteAsync(request);
+
+            Assert.Equal(0, result.Errors.Count);
+        }
+        /// <summary>
+        /// 5. Provide a query showing a unique list of billing countries from the Invoice table.
+        /// No disctinct filter for hot chocolate yet might aswell practice linq / JOBject
+        /// </summary>
+        [Fact]
+        public async void Test_05()
+        {
+            string gql =
+                "query{" +
+                  "invoices{" +
+                        "billingCountry " +
+                    "}}";
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var result = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(result);
+            var jObj = JObject.Parse(json);
+
+            var countries =
+                from p in jObj["Data"]["invoices"]
+                select (string)p["billingCountry"];
+
+            var distinct = countries.Select(x => x).Distinct();
+
+            Assert.Equal(0, result.Errors.Count);
+            Assert.True(countries.Count() > distinct.Count());
+        }
+        /// <summary>
+        /// 6. Provide a query that shows the invoices associated with each sales agent. The resultant table should include the Sales Agent's full name.
+        /// </summary>
+        [Fact]
+        public async void Test_06()
+        {
+            string gql =
+                "query{" +
+                  "employees(where: {title_contains: \"Agent\"}){" +
+                        "firstName " +
+                        "lastName " +
+                        "customers{ " +
+                            "invoices{ " +
+                                "invoiceId" +
+                    "}}}}";
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var result = await executor.ExecuteAsync(request);
+
+            Assert.Equal(0, result.Errors.Count);
+        }
+        /// <summary>
+        /// 7. Provide a query that shows the Invoice Total, Customer name, Country and Sale Agent name for all invoices and customers.
+        /// </summary>
+        [Fact]
+        public async void Test_07()
+        {
+            string gql =
+                "query{" +
+                  "customers{" +
+                        "firstName " +
+                        "lastName " +
+                        "country " +
+                        "supportRep{ " +
+                            "firstName " +
+                            "lastName " +
+                         "}" +
+                         "invoices{ " +
+                            "total" +
+                    "}}}";
 
             var serviceProvider = ComponentFactory.GetServiceProvider();
             var executor = ComponentFactory.GetQueryExecutor();

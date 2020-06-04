@@ -1,4 +1,5 @@
-﻿using HotChocolate.Types;
+﻿using HotChocolate;
+using HotChocolate.Types;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,7 @@ namespace Chinook.Domain.Models
         public int ArtistId { get; set; }
         public string Name { get; set; }
 
-        [UseFiltering]
+        [GraphQLIgnore]
         public virtual ICollection<Album> Album { get; set; }
     }
 }

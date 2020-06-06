@@ -197,5 +197,42 @@ namespace Chinook.Test
 
             Assert.Equal(0, result.Errors.Count);
         }
+        /// <summary>
+        /// 8. How many Invoices were there in 2009 and 2011? What are the respective total sales for each of those years?
+        /// </summary>
+        [Fact]
+        public async void Test_08()
+        {
+            string gql =
+                "query{" +
+                    "year2009: invoices(where: {AND: [{invoiceDate_gt: \"2009-01-01\"}, {invoiceDate_lt: \"2009-12-31\"}]}){ " +
+                        "invoiceDate " +
+                    "}" +
+                     "year2011: invoices(where: {AND: [{invoiceDate_gt: \"2011-01-01\"}, {invoiceDate_lt: \"2011-12-31\"}]}){ " +
+                        "invoiceDate " +
+                    "}" +
+                 "}";
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var result = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(result);
+            var jObj = JObject.Parse(json);
+
+            var year2009 =
+                from p in jObj["Data"]["year2009"]
+                select (string)p["invoiceDate"];
+
+            var year2011 =
+                from p in jObj["Data"]["year2011"]
+                select (string)p["invoiceDate"];
+
+            var answer = year2009.Count() + year2011.Count();
+
+            Assert.Equal(0, result.Errors.Count);
+        }
     }
 }

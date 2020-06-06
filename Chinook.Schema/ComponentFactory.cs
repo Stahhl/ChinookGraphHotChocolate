@@ -38,15 +38,25 @@ namespace Chinook.Schema
 
             return result;
         }
-        public static IReadOnlyQueryRequest GetQueryRequest(IServiceProvider serviceProvider, string gql)
+        public static IReadOnlyQueryRequest GetQueryRequest(IServiceProvider serviceProvider, string gql, Dictionary<string, object> variables = null)
         {
-            var result = QueryRequestBuilder.New()
-                .SetQuery(gql)
-                .SetServices(serviceProvider)
-                .AddProperty("Key", "value")
-                .Create();
+            //var result = QueryRequestBuilder.New()
+            //    .SetQuery(gql)
+            //    .SetServices(serviceProvider)
+            //    .AddProperty("Key", "value")
+            //    .Create();
 
-            return result;
+            var qb = new QueryRequestBuilder();
+
+            qb.SetQuery(gql);
+            qb.SetServices(serviceProvider);
+            qb.TryAddProperty("key", "value");
+
+            if (variables != null)
+                qb.SetVariableValues(variables);
+
+
+            return qb.Create();
         }
     }
 }

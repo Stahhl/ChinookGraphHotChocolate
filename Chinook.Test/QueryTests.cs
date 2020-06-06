@@ -52,8 +52,8 @@ namespace Chinook.Test
             string gql =
                 "query{" +
                   "customers(where: { country_contains: \"Brazil\"}){ " +
-                        "firstName " + 
-                        "lastName " + 
+                        "firstName " +
+                        "lastName " +
                     "}}";
 
             var serviceProvider = ComponentFactory.GetServiceProvider();
@@ -73,12 +73,12 @@ namespace Chinook.Test
         {
             string gql =
                 "query{" +
-                  "customers(where: { country_contains: \"Brazil\"}){ " +
+                  "customers(where: { country: \"Brazil\"}){ " +
                         "firstName " +
                         "lastName " +
                         "customerId " +
                         "country " +
-                        "invoice{ " +
+                        "invoices{ " +
                             "invoiceId " +
                             "invoiceDate " +
                             "billingCountry " +
@@ -233,6 +233,42 @@ namespace Chinook.Test
             var answer = year2009.Count() + year2011.Count();
 
             Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(166, answer);
         }
+
+        /// <summary>
+        ///     9. Loking at the InvoiceLine table, provide a query that COUNTs the number of line items for Invoice ID 37.
+        /// </summary>
+        [Fact]
+        public async void Test_09()
+        {
+            string gql =
+                "query ($id: Int!){" +
+                    "invoice(id: $id){ " +
+                        "invoiceLines{ " +
+                            "invoiceLineId" +
+                "}}}";
+
+            var variables = new Dictionary<string, object>() { { "id", 37 } };
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql, variables);
+
+            var result = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(result);
+            var jObj = JObject.Parse(json);
+
+            var invoiceLines =
+                from p in jObj["Data"]["invoice"]["invoiceLines"]
+                select (string)p["invoiceLineId"];
+
+            var answer = invoiceLines.Count();
+
+            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(4, answer);
+        }
+
     }
 }

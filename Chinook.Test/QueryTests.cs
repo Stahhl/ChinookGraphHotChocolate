@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Chinook.Schema.Models;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using System.Globalization;
 
 namespace Chinook.Test
 {
@@ -206,10 +207,10 @@ namespace Chinook.Test
             string gql =
                 "query{" +
                     "year2009: invoices(where: {AND: [{invoiceDate_gt: \"2009-01-01\"}, {invoiceDate_lt: \"2009-12-31\"}]}){ " +
-                        "invoiceDate " +
+                        "total " +
                     "}" +
                      "year2011: invoices(where: {AND: [{invoiceDate_gt: \"2011-01-01\"}, {invoiceDate_lt: \"2011-12-31\"}]}){ " +
-                        "invoiceDate " +
+                        "total " +
                     "}" +
                  "}";
 
@@ -224,20 +225,24 @@ namespace Chinook.Test
 
             var year2009 =
                 from p in jObj["Data"]["year2009"]
-                select (string)p["invoiceDate"];
+                select (string)p["total"];
 
             var year2011 =
                 from p in jObj["Data"]["year2011"]
-                select (string)p["invoiceDate"];
+                select (string)p["total"];
 
-            var answer = year2009.Count() + year2011.Count();
+            var period = year2009.Concat(year2011);
+
+            var numberOfInvoices = period.Count();
+            var totalSales = period.Select(x => decimal.Parse(x, new CultureInfo("en-GB"))).Sum();
 
             Assert.Equal(0, result.Errors.Count);
-            Assert.Equal(166, answer);
+            Assert.Equal(166, numberOfInvoices);
+            Assert.Equal((decimal)919.04, totalSales);
         }
 
         /// <summary>
-        ///     9. Loking at the InvoiceLine table, provide a query that COUNTs the number of line items for Invoice ID 37.
+        /// 9. Loking at the InvoiceLine table, provide a query that COUNTs the number of line items for Invoice ID 37.
         /// </summary>
         [Fact]
         public async void Test_09()
@@ -246,7 +251,7 @@ namespace Chinook.Test
                 "query ($id: Int!){" +
                     "invoice(id: $id){ " +
                         "invoiceLines{ " +
-                            "invoiceLineId" +
+                            "quantity" +
                 "}}}";
 
             var variables = new Dictionary<string, object>() { { "id", 37 } };
@@ -260,14 +265,47 @@ namespace Chinook.Test
             var json = JsonConvert.SerializeObject(result);
             var jObj = JObject.Parse(json);
 
-            var invoiceLines =
+            var quantity =
                 from p in jObj["Data"]["invoice"]["invoiceLines"]
-                select (string)p["invoiceLineId"];
+                select (int)p["quantity"];
 
-            var answer = invoiceLines.Count();
+            var answer = quantity.Sum();
 
             Assert.Equal(0, result.Errors.Count);
             Assert.Equal(4, answer);
+        }
+
+        /// <summary>
+        /// 10. Looking at the InvoiceLine table, provide a query that COUNTs the number of line items for each Invoice. HINT: GROUP BY
+        /// </summary>
+        /// Needs work
+        [Fact]
+        public async void Test_10()
+        {
+            string gql =
+                "query{" +
+                    "invoices{ " +
+                        "invoiceLines{ " +
+                            "quantity" +
+                "}}}";
+
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var result = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(result);
+            var jObj = JObject.Parse(json);
+
+            var quantity = from p in jObj["Data"]["invoices"].SelectMany(i => i["invoiceLines"])
+                       select (int)p["quantity"];
+
+            var answer = quantity.Sum();
+
+            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(251, answer);
         }
 
     }

@@ -40,9 +40,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
         }
         /// <summary>
         /// 2. Provide a query only showing the Customers from Brazil.
@@ -61,13 +61,13 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
         }
         /// <summary>
         /// 3. Provide a query showing the Invoices of customers who are from Brazil. 
-        /// The resultant table should show the customer's full name, Invoice ID, Date of the invoice and billing country.
+        /// The responseant table should show the customer's full name, Invoice ID, Date of the invoice and billing country.
         /// </summary>
         [Fact]
         public async void Test_03()
@@ -89,9 +89,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
         }
         /// <summary>
         /// 4. Provide a query showing only the Employees who are Sales Agents.
@@ -111,9 +111,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
         }
         /// <summary>
         /// 5. Provide a query showing a unique list of billing countries from the Invoice table.
@@ -132,9 +132,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            var json = JsonConvert.SerializeObject(result);
+            var json = JsonConvert.SerializeObject(response);
             var jObj = JObject.Parse(json);
 
             var countries =
@@ -143,11 +143,11 @@ namespace Chinook.Test
 
             var distinct = countries.Select(x => x).Distinct();
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
             Assert.True(countries.Count() > distinct.Count());
         }
         /// <summary>
-        /// 6. Provide a query that shows the invoices associated with each sales agent. The resultant table should include the Sales Agent's full name.
+        /// 6. Provide a query that shows the invoices associated with each sales agent. The responseant table should include the Sales Agent's full name.
         /// </summary>
         [Fact]
         public async void Test_06()
@@ -166,9 +166,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
         }
         /// <summary>
         /// 7. Provide a query that shows the Invoice Total, Customer name, Country and Sale Agent name for all invoices and customers.
@@ -194,9 +194,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
         }
         /// <summary>
         /// 8. How many Invoices were there in 2009 and 2011? What are the respective total sales for each of those years?
@@ -218,9 +218,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            var json = JsonConvert.SerializeObject(result);
+            var json = JsonConvert.SerializeObject(response);
             var jObj = JObject.Parse(json);
 
             var year2009 =
@@ -236,7 +236,7 @@ namespace Chinook.Test
             var numberOfInvoices = period.Count();
             var totalSales = period.Select(x => decimal.Parse(x, new CultureInfo("en-GB"))).Sum();
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
             Assert.Equal(166, numberOfInvoices);
             Assert.Equal((decimal)919.04, totalSales);
         }
@@ -260,9 +260,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql, variables);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            var json = JsonConvert.SerializeObject(result);
+            var json = JsonConvert.SerializeObject(response);
             var jObj = JObject.Parse(json);
 
             var quantity =
@@ -271,7 +271,7 @@ namespace Chinook.Test
 
             var answer = quantity.Sum();
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
             Assert.Equal(4, answer);
         }
 
@@ -283,7 +283,7 @@ namespace Chinook.Test
         public async void Test_10()
         {
             string gql =
-                "query{" +
+                "query{ " +
                     "invoices{ " +
                         "invoiceLines{ " +
                             "quantity" +
@@ -294,9 +294,9 @@ namespace Chinook.Test
             var executor = ComponentFactory.GetQueryExecutor();
             var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
 
-            var result = await executor.ExecuteAsync(request);
+            var response = await executor.ExecuteAsync(request);
 
-            var json = JsonConvert.SerializeObject(result);
+            var json = JsonConvert.SerializeObject(response);
             var jObj = JObject.Parse(json);
 
             var quantity = from p in jObj["Data"]["invoices"].SelectMany(i => i["invoiceLines"])
@@ -304,8 +304,37 @@ namespace Chinook.Test
 
             var answer = quantity.Sum();
 
-            Assert.Equal(0, result.Errors.Count);
+            Assert.Equal(0, response.Errors.Count);
             Assert.Equal(251, answer);
+        }
+        /// <summary>
+        /// 11. Provide a query that includes the track name with each invoice line item.
+        /// </summary>
+        /// Needs work
+        [Fact]
+        public async void Test_11()
+        {
+            string gql =
+                "query{" +
+                    "invoiceLines{" +
+                        "track{" +
+                            "name" +
+                "}}}";
+
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var response = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(response);
+            var jObj = JObject.Parse(json);
+
+            var result = from p in jObj["Data"]["invoiceLines"].Select(i => i["track"])
+                           select (string)p["name"];
+
+            Assert.Equal(0, response.Errors.Count);
         }
 
     }

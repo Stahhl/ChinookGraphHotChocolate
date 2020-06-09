@@ -56,6 +56,24 @@ namespace Chinook.Schema.Querys
                 .Type<ListType<NonNullType<EmployeeType>>>()
                 .UseFiltering();
             #endregion
+
+            #region Track
+            descriptor.Field(t => t.Track(default, default))
+                .Type<NonNullType<TrackType>>();
+
+            descriptor.Field(t => t.Tracks(default))
+                .Type<ListType<NonNullType<TrackType>>>()
+                .UseFiltering();
+            #endregion
+
+            #region Album
+            descriptor.Field(t => t.Album(default, default))
+                .Type<NonNullType<AlbumType>>();
+
+            descriptor.Field(t => t.Albums(default))
+                .Type<ListType<NonNullType<AlbumType>>>()
+                .UseFiltering();
+            #endregion
         }
     }
 }

@@ -336,6 +336,41 @@ namespace Chinook.Test
 
             Assert.Equal(0, response.Errors.Count);
         }
+        /// <summary>
+        /// 12. Provide a query that includes the purchased track name AND artist name with each invoice line item.
+        /// </summary>
+        [Fact]
+        public async void Test_12()
+        {
+            string gql =
+                "query{ " +
+                    "invoiceLines{ " +
+                        "track{ " +
+                            "name " +
+                            "album{" +
+                                "artist{ " +
+                                    "name " +
+                "}}}}}";
+
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var response = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(response);
+            var jObj = JObject.Parse(json);
+
+            var result = from p in jObj["Data"]["invoiceLines"].Select(i => i["track"])
+                         select new
+                         {
+                             Track = (string)p["name"],
+                             Artist = (string)p["album"]["artist"]["name"]
+                         };
+
+            Assert.Equal(0, response.Errors.Count);
+        }
 
     }
 }

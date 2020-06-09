@@ -88,5 +88,35 @@ namespace Chinook.Schema.Querys
             return result;
         }
         #endregion
+
+        #region Track
+        public Track Track([Service] ChinookContext context, int id)
+        {
+            var result = context.Track.FirstOrDefault(c => c.TrackId == id);
+
+            return result;
+        }
+        public IQueryable<Track> Tracks([Service] ChinookContext context)
+        {
+            var result = context.Track;
+
+            return result;
+        }
+        #endregion
+
+        #region Albunm
+        public Album Album([Service] ChinookContext context, int id)
+        {
+            var result = context.Album.FirstOrDefault(c => c.AlbumId == id);
+
+            return result;
+        }
+        public IQueryable<Album> Albums([Service] ChinookContext context)
+        {
+            var result = context.Album;
+
+            return result;
+        }
+        #endregion
     }
 }

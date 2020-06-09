@@ -1,14 +1,11 @@
 ﻿using Chinook.Domain;
 using Chinook.Domain.Models;
-using Chinook.Schema.Resolvers;
 using HotChocolate;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Chinook.Common.StringHelper;
 
 namespace Chinook.Schema.Types

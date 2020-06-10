@@ -118,5 +118,21 @@ namespace Chinook.Schema.Querys
             return result;
         }
         #endregion
+
+        #region Playlist
+        public Playlist Playlist([Service] ChinookContext context, int id)
+        {
+            var result = context.Playlist.FirstOrDefault(c => c.PlaylistId == id);
+
+            return result;
+        }
+        public IQueryable<Playlist> Playlists([Service] ChinookContext context)
+        {
+            var result = context.Playlist;
+
+            return result;
+        }
+        #endregion
+
     }
 }

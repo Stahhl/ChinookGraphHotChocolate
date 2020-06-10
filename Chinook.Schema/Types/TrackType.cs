@@ -2,6 +2,7 @@
 using Chinook.Domain.Models;
 using HotChocolate;
 using HotChocolate.Types;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using static Chinook.Common.StringHelper;
 
@@ -60,7 +61,7 @@ namespace Chinook.Schema.Types
         }
         public IQueryable<PlaylistTrack> PlaylistTracks([Service] ChinookContext context, [Parent] Track track)
         {
-            var result = context.PlaylistTrack.Where(i => i.TrackId == track.TrackId);
+            var result = context.PlaylistTrack.Where(i => i.TrackId == track.TrackId).Include(x => x.Playlist);
 
             return result;
         }

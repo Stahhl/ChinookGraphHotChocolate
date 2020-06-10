@@ -74,6 +74,16 @@ namespace Chinook.Schema.Querys
                 .Type<ListType<NonNullType<AlbumType>>>()
                 .UseFiltering();
             #endregion
+
+            #region Playlist
+            descriptor.Field(t => t.Playlist(default, default))
+                .Type<NonNullType<PlaylistType>>();
+
+            descriptor.Field(t => t.Playlists(default))
+                .Type<ListType<NonNullType<PlaylistType>>>()
+                .UseFiltering();
+            #endregion
+
         }
     }
 }

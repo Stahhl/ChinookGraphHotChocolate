@@ -371,6 +371,69 @@ namespace Chinook.Test
 
             Assert.Equal(0, response.Errors.Count);
         }
+        /// <summary>
+        /// 13. Provide a query that shows the # of invoices per country. HINT: GROUP BY
+        /// </summary>
+        [Fact]
+        public async void Test_13()
+        {
+            string gql =
+                "query{ " +
+                    "invoices{ " +
+                        "customer{ " +
+                            "country " +
+                "}}}";
+
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var response = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(response);
+            var jObj = JObject.Parse(json);
+
+            var result = from p in jObj["Data"]["invoices"].Select(i => i["customer"])
+                         group p by (string)p["country"] into g
+                         select new { Country = g.Key, Count = g.Count() };
+
+            Assert.Equal(0, response.Errors.Count);
+        }
+
+        /// <summary>
+        /// 14. Provide a query that shows the total number of tracks in each playlist. The Playlist name should be included on the resultant table.
+        /// </summary>
+        [Fact]
+        public async void Test_14()
+        {
+            string gql =
+                "query{ " +
+                    "playlists{ " +
+                        "name " +
+                        "tracks{ " +
+                            "name " +
+                "}}}";
+
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var response = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(response);
+            var jObj = JObject.Parse(json);
+
+            var result = from p in jObj["Data"]["playlists"]
+                         select new
+                         {
+                             Name = (string)p["name"],
+                             Tracks = p["tracks"].Select(i => i["name"]).Count()
+                         };
+
+            Assert.Equal(0, response.Errors.Count);
+        }
 
     }
 }

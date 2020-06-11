@@ -305,7 +305,7 @@ namespace Chinook.Test
             var answer = quantity.Sum();
 
             Assert.Equal(0, response.Errors.Count);
-            Assert.Equal(251, answer);
+            Assert.Equal(2240, answer);
         }
         /// <summary>
         /// 11. Provide a query that includes the track name with each invoice line item.
@@ -431,6 +431,81 @@ namespace Chinook.Test
                              Name = (string)p["name"],
                              Tracks = p["tracks"].Select(i => i["name"]).Count()
                          };
+
+            Assert.Equal(0, response.Errors.Count);
+        }
+        /// <summary>
+        /// 15. Provide a query that shows all the Tracks, but displays no IDs. The resultant table should include the Album name, Media type and Genre.
+        /// </summary>
+        [Fact]
+        public async void Test_15()
+        {
+            string gql =
+                "query{" +
+                    "tracks{" +
+                        "name " +
+                        "album{ " +
+                            "title " +
+                        "}" +
+                        "mediaType{ " +
+                            "name " +
+                        "}" +
+                        "genre{ " +
+                            "name " +
+                "}}}";
+
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var response = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(response);
+            var jObj = JObject.Parse(json);
+
+            var result = from p in jObj["Data"]["tracks"]
+                         select new
+                         {
+                             Track = (string)p["name"],
+                             Album = (string)p["album"]["title"],
+                             Type = (string)p["mediaType"]["name"],
+                             Genre = (string)p["genre"]["name"],
+                         };
+
+            Assert.Equal(0, response.Errors.Count);
+        }
+
+        /// <summary>
+        /// 16. Provide a query that shows all Invoices but includes the # of invoice line items.
+        /// </summary>
+        [Fact]
+        public async void Test_16()
+        {
+            string gql =
+                "query{ " +
+                    "invoices{ " +
+                    "invoiceId " +
+                        "invoiceLines{ " +
+                            "quantity" +
+                "}}}";
+
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var response = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(response);
+            var jObj = JObject.Parse(json);
+
+            var result = (from p in jObj["Data"]["invoices"]
+                         select new
+                         {
+                             Invoice = (string)p["invoiceId"],
+                             LineItems = p["invoiceLines"].Select(i => (int)i["quantity"]).Count()
+                         }).OrderByDescending(p => p.LineItems);
 
             Assert.Equal(0, response.Errors.Count);
         }

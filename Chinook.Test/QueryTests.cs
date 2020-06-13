@@ -509,6 +509,42 @@ namespace Chinook.Test
 
             Assert.Equal(0, response.Errors.Count);
         }
+        /// <summary>
+        /// 17. Provide a query that shows total sales made by each sales agent.
+        /// </summary>
+        [Fact]
+        public async void Test_17()
+        {
+            string gql =
+                "query{ " +
+                    "employees{ " +
+                        "firstName " +
+                        "lastName " +
+                        "customers{ " +
+                            "invoices{ " +
+                                "total " +
+                "}}}}";
+
+
+            var serviceProvider = ComponentFactory.GetServiceProvider();
+            var executor = ComponentFactory.GetQueryExecutor();
+            var request = ComponentFactory.GetQueryRequest(serviceProvider, gql);
+
+            var response = await executor.ExecuteAsync(request);
+
+            var json = JsonConvert.SerializeObject(response);
+            var jObj = JObject.Parse(json);
+
+            var result = from p in jObj["Data"]["employees"]
+                          select new
+                          {
+                              Name = (string)p["firstName"] + " " + (string)p["lastName"],
+                              Sales = (int)p["customers"].Count() > 0  ? p["customers"]["invoices"].Select(i => (float?)i["total"]).Sum() : 0
+                          };
+
+            Assert.Equal(0, response.Errors.Count);
+        }
+
 
     }
 }
